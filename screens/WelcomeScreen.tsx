@@ -8,6 +8,7 @@ import MessageComposer from "@/components/MessageComposer";
 import { CameraIcon, MicrophoneIcon, ArrowPathIcon, ChatBubbleLeftRightIcon,
  } from "@heroicons/react/24/outline";
 import MessagePanel from "@/components/MessagePanel";
+import Image from "next/image";
 
 interface Props {
   doorName: string;
@@ -26,7 +27,7 @@ type SentMessage =
     };
 
 
-export default function WelcomeScreen({ doorName }: Props) {
+export default function WelcomeScreen({ doorName, }: Props) {
   const [state, setState] = useState<CallState>("idle");
   const [secondsLeft, setSecondsLeft] = useState(30);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
@@ -310,16 +311,19 @@ const handleSendMessage = (msg: {
           key={msg.id}
           className="bg-muted/10 rounded-2xl p-3 text-sm"
         >
-          {msg.type !== "image" && msg.text && (
-            <p>{msg.text}</p>
-          )}
+          {(msg.type === "text" || msg.type === "mixed") && (
+  <p>{msg.text}</p>
+)}
 
-          {msg.previewUrl && (
-            <img
-              src={msg.previewUrl}
-              className="mt-2 rounded-xl max-h-48 object-cover"
-            />
-          )}
+
+          {(msg.type === "image" || msg.type === "mixed") && (
+  <Image
+    src={msg.previewUrl}
+    className="mt-2 rounded-xl max-h-48 object-cover"
+    alt="message-image"
+  />
+)}
+
         </div>
       ))}
     </div>

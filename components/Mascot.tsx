@@ -1,6 +1,7 @@
 interface Props {
-  state?: "idle" | "ringing";
+  state?: "idle" | "ringing" | "sad";
 }
+
 
 export default function Mascot({ state = "idle" }: Props) {
   return (
@@ -11,11 +12,22 @@ export default function Mascot({ state = "idle" }: Props) {
           flex items-center justify-center
           text-4xl
           transition-all
-          ${state === "ringing" ? "bg-accent animate-bounce" : "bg-secondary"}
+          ${
+            state === "ringing"
+              ? "bg-accent animate-bounce"
+              : state === "sad"
+              ? "bg-muted"
+              : "bg-secondary"
+          }
         `}
       >
-        {state === "ringing" ? "🔔" : "😊"}
+        {state === "ringing"
+          ? "🔔"
+          : state === "sad"
+          ? "😔"
+          : "😊"}
       </div>
     </div>
   );
 }
+

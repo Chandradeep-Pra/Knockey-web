@@ -1,27 +1,37 @@
 interface Props {
   children: React.ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
-export default function PrimaryButton({ children, onClick }: Props) {
+
+export default function PrimaryButton({
+  children,
+  onClick,
+  disabled = false,
+}: Props) {
   return (
     <button
       onClick={onClick}
-      className="
+      disabled={disabled}
+      className={`
         w-full
-        bg-primary
-        text-white
         py-4
         rounded-2xl
         font-medium
         text-lg
         transition
-        active:scale-95
-        hover:brightness-105
         shadow-lg
-      "
+
+        ${
+          disabled
+            ? "bg-muted text-muted cursor-not-allowed"
+            : "bg-primary text-white hover:brightness-105 active:scale-95"
+        }
+      `}
     >
       {children}
     </button>
   );
 }
+
