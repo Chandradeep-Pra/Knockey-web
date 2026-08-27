@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+:root {
+  --knockey-purple: #6c45b8;
+  --knockey-glow: #8b5cff;
+  --knockey-glow-bright: #b47aff;
+}
+
 /* ------------------------------
    Design Tokens (Light Mode)
 -------------------------------- */
@@ -40,8 +46,7 @@ html {
   --color-card: var(--card);
   --color-border: var(--border);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-manrope);
 }
 
 /* ------------------------------
@@ -62,9 +67,85 @@ html {
    Base Styles
 -------------------------------- */
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans, system-ui, sans-serif);
+  background: #000;
+  color: #fff;
+  font-family: var(--font-manrope), sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Typography roles */
+.type-display {
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+
+.type-heading {
+  font-weight: 500;
+}
+
+.type-body {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.type-label {
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.knockey-stage-copy {
+  animation: knockey-stage-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.knockey-side-card {
+  position: relative;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1rem;
+  background: linear-gradient(145deg, rgba(24, 20, 31, 0.9), rgba(8, 8, 10, 0.9));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  color: white;
+  animation: knockey-stage-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.knockey-transcript-bubble {
+  border-radius: 0.7rem;
+}
+
+.knockey-transcript-bubble::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  bottom: 18px;
+  width: 16px;
+  height: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  background: #0d0b10;
+  transform: rotate(45deg);
+}
+
+.knockey-side-card button {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  text-align: left;
+}
+
+.knockey-side-card button.knockey-action-active {
+  border-color: transparent;
+  background: #6c45b8;
+}
+
+@keyframes knockey-stage-in {
+  from { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 
