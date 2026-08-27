@@ -1,6 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500&display=swap");
 @import "tailwindcss";
 
 :root {
+  --font-manrope: "Manrope";
   --knockey-purple: #6c45b8;
   --knockey-glow: #8b5cff;
   --knockey-glow-bright: #b47aff;

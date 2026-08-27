@@ -1,4 +1,4 @@
-import { adminAuth } from "./firebase-admin";
+import { getAdminAuth } from "./firebase-admin";
 
 export class UnauthorizedError extends Error {
   constructor() {
@@ -21,7 +21,7 @@ export async function requireAuth(request: Request) {
   }
 
   try {
-    const decoded = await adminAuth.verifyIdToken(token);
+    const decoded = await getAdminAuth().verifyIdToken(token);
 
     return {
       firebaseUid: decoded.uid,
