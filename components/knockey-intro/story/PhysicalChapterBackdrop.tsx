@@ -24,8 +24,8 @@ export function PhysicalChapterBackdrop({ visible, glowRef }: PhysicalChapterBac
         ref={glowRef}
         className="pointer-events-none absolute left-1/2 top-1/2 opacity-0 transition-opacity duration-[1400ms] ease-out"
       >
-        <div className="absolute h-52 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#8B5CFF]/30 blur-[42px]" />
-        <div className="absolute h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#B47AFF]/45 shadow-[0_0_45px_12px_rgba(139,92,255,0.3)]" />
+        <div className="absolute h-[6.5rem] w-[6.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#8B5CFF]/30 blur-[22px] md:h-52 md:w-52 md:blur-[42px]" />
+        <div className="absolute h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#B47AFF]/45 shadow-[0_0_22px_6px_rgba(139,92,255,0.3)] md:h-36 md:w-36 md:shadow-[0_0_45px_12px_rgba(139,92,255,0.3)]" />
       </div>
     </div>
   );

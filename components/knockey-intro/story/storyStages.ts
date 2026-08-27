@@ -50,6 +50,7 @@ export const storyStages: StoryStage[] = [
     label: 'INTENT · CONTEXT · VISITOR',
     ringColor: '#955CFF',
     oledMode: 'understanding',
+    singleLineHeadline: true,
   },
   {
     id: 3,

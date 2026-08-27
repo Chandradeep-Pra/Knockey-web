@@ -405,24 +405,32 @@ export const KnockeyIntroScreen: React.FC = () => {
       const finalStageProgress = finalPlacementRef.current;
 
       if (puckGroupRef.current) {
+        const currentWidth = canvasMountRef.current?.clientWidth || window.innerWidth;
+        const isPhone = currentWidth <= 640;
+
         // SCROLL-DRIVEN TRANSFORMATIONS (Once loaded):
-        // 1. Size: 85% of original rendered scale (1.0 -> 0.85)
         const introScale = isLoadedRef.current ? 1.0 : puckGroupRef.current.scale.x;
-        const storyScale = introScale * (1.0 - 0.15 * dockProgress);
-        const currentScale = THREE.MathUtils.lerp(storyScale, 0.42, finalStageProgress);
+        const scaleMultiplier = isPhone
+          ? 0.58 - 0.1 * dockProgress
+          : 1.0 - 0.15 * dockProgress;
+        const storyScale = introScale * scaleMultiplier;
+        const finalScale = isPhone ? 0.187 : 0.42;
+        const currentScale = THREE.MathUtils.lerp(storyScale, finalScale, finalStageProgress);
         puckGroupRef.current.scale.set(currentScale, currentScale, currentScale);
 
         // 2. Position: Moves to Center Right of the screen (y remains centered at 0)
-        const currentWidth = canvasMountRef.current?.clientWidth || window.innerWidth;
-        const isPhone = currentWidth <= 640;
         const targetRightX = isPhone ? 0 : 2.45;
-        const targetCenterY = isPhone ? 1.15 : 0;
+        const targetCenterY = isPhone ? 0.75 : 0;
 
         const storyX = targetRightX * dockProgress;
-        const finalMountX = isPhone ? -0.55 : -1.35;
-        const finalMountY = isPhone ? 0.85 : 0;
+        const initialPhoneY = 0.6;
+        const storyY = isPhone
+          ? THREE.MathUtils.lerp(initialPhoneY, targetCenterY, dockProgress)
+          : targetCenterY * dockProgress;
+        const finalMountX = isPhone ? -0.95 : -1.35;
+        const finalMountY = isPhone ? 0.3 : 0;
         puckGroupRef.current.position.x = THREE.MathUtils.lerp(storyX, finalMountX, finalStageProgress);
-        puckGroupRef.current.position.y = THREE.MathUtils.lerp(targetCenterY * dockProgress, finalMountY, finalStageProgress);
+        puckGroupRef.current.position.y = THREE.MathUtils.lerp(storyY, finalMountY, finalStageProgress);
 
         // Anchor the final wall glow to the Puck's real projected screen position.
         if (wallGlowRef.current && cameraRef.current) {
@@ -519,6 +527,37 @@ export const KnockeyIntroScreen: React.FC = () => {
       }
     };
 
+    let initialPhoneBeta: number | null = null;
+    const handleDeviceOrientation = (event: DeviceOrientationEvent) => {
+      if (
+        window.innerWidth > 768 ||
+        activeStageRef.current !== -1 ||
+        event.beta === null ||
+        event.gamma === null
+      ) return;
+      if (initialPhoneBeta === null) initialPhoneBeta = event.beta;
+
+      const horizontalTilt = THREE.MathUtils.clamp(event.gamma / 35, -1, 1);
+      const verticalTilt = THREE.MathUtils.clamp((event.beta - initialPhoneBeta) / 30, -1, 1);
+      mouseTargetRef.current = { x: horizontalTilt, y: verticalTilt };
+    };
+
+    const requestMotionPermission = () => {
+      if (activeStageRef.current !== -1) return;
+
+      const orientationApi = window.DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+        requestPermission?: () => Promise<'granted' | 'denied'>;
+      };
+
+      if (orientationApi?.requestPermission) {
+        void orientationApi.requestPermission().catch(() => {
+          // Motion is optional; keep the static initial Puck when denied.
+        });
+      }
+
+      window.removeEventListener('pointerdown', requestMotionPermission);
+    };
+
     let touchStartY = 0;
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
@@ -530,6 +569,9 @@ export const KnockeyIntroScreen: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+    window.addEventListener('deviceorientationabsolute', handleDeviceOrientation as EventListener, { passive: true });
+    window.addEventListener('pointerdown', requestMotionPermission, { passive: true });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
@@ -552,6 +594,9 @@ export const KnockeyIntroScreen: React.FC = () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleWindowScroll);
+      window.removeEventListener('deviceorientation', handleDeviceOrientation);
+      window.removeEventListener('deviceorientationabsolute', handleDeviceOrientation as EventListener);
+      window.removeEventListener('pointerdown', requestMotionPermission);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       renderer.dispose();
@@ -598,7 +643,7 @@ export const KnockeyIntroScreen: React.FC = () => {
         <DeviceCanvas canvasMountRef={canvasMountRef} />
         {activeStage !== null && (
           <>
-            <div className={`absolute inset-y-0 left-0 z-20 flex w-full items-end px-6 pb-10 sm:px-12 md:items-center md:pb-0 lg:px-[7vw] pointer-events-none ${activeStage === storyStages.length - 1 ? 'md:justify-end md:text-right md:!pr-[6vw]' : ''}`}>
+            <div className={`absolute inset-y-0 left-0 z-20 flex w-full items-end px-6 pb-20 sm:px-12 md:items-center md:pb-0 lg:px-[7vw] pointer-events-none ${activeStage === storyStages.length - 1 ? 'md:justify-end md:text-right md:!pr-[6vw]' : ''}`}>
               <StoryCopy stage={storyStages[activeStage]} />
             </div>
             <div className={`absolute z-20 hidden xl:block ${storyStages[activeStage].sideUi === 'transcript' ? 'left-[51%] top-[19%]' : 'right-[8vw] top-1/2 -translate-y-1/2'}`}>

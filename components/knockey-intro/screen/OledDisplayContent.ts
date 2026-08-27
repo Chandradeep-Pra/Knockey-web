@@ -79,7 +79,15 @@ function renderStageContent(
     renderWaveform(ctx, time, reveal, color, 1375);
     return;
   }
-  renderCenteredLines(ctx, fontFamily, ['Ready.'], color);
+  renderReady(ctx, fontFamily);
+}
+
+function renderReady(ctx: CanvasRenderingContext2D, fontFamily: string) {
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `400 132px ${fontFamily}`;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText('Ready.', 1024, 1024);
 }
 
 function renderListening(
