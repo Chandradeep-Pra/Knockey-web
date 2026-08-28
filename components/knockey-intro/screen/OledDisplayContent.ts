@@ -79,7 +79,50 @@ function renderStageContent(
     renderWaveform(ctx, time, reveal, color, 1375);
     return;
   }
+  if (mode === 'qr') {
+    renderQr(ctx);
+    return;
+  }
   renderReady(ctx, fontFamily);
+}
+
+function renderQr(ctx: CanvasRenderingContext2D) {
+  const moduleCount = 29;
+  const cell = 24;
+  const size = moduleCount * cell;
+  const startX = 1024 - size / 2;
+  const startY = 1024 - size / 2;
+
+  const isFinderArea = (x: number, y: number) =>
+    (x < 8 && y < 8) || (x >= moduleCount - 8 && y < 8) || (x < 8 && y >= moduleCount - 8);
+
+  ctx.fillStyle = '#F5F2F7';
+  for (let y = 0; y < moduleCount; y++) {
+    for (let x = 0; x < moduleCount; x++) {
+      if (isFinderArea(x, y)) continue;
+      const seeded = (x * 17 + y * 31 + x * y * 7) % 11;
+      if (seeded > 5) continue;
+      ctx.beginPath();
+      ctx.roundRect(startX + x * cell + 2, startY + y * cell + 2, cell - 4, cell - 4, 4);
+      ctx.fill();
+    }
+  }
+
+  drawFinder(ctx, startX, startY, cell);
+  drawFinder(ctx, startX + (moduleCount - 7) * cell, startY, cell);
+  drawFinder(ctx, startX, startY + (moduleCount - 7) * cell, cell);
+}
+
+function drawFinder(ctx: CanvasRenderingContext2D, x: number, y: number, cell: number) {
+  ctx.fillStyle = '#F5F2F7';
+  // White finder border; the OLED black remains untouched in the gap.
+  ctx.fillRect(x, y, cell * 7, cell);
+  ctx.fillRect(x, y + cell * 6, cell * 7, cell);
+  ctx.fillRect(x, y + cell, cell, cell * 5);
+  ctx.fillRect(x + cell * 6, y + cell, cell, cell * 5);
+  ctx.beginPath();
+  ctx.roundRect(x + cell * 2, y + cell * 2, cell * 3, cell * 3, 7);
+  ctx.fill();
 }
 
 function renderReady(ctx: CanvasRenderingContext2D, fontFamily: string) {

@@ -7,7 +7,8 @@ export type OledMode =
   | 'notifying'
   | 'control'
   | 'responding'
-  | 'ready';
+  | 'ready'
+  | 'qr';
 
 export type StoryStage = {
   id: number;
@@ -20,6 +21,7 @@ export type StoryStage = {
   oledMode: OledMode;
   sideUi?: 'transcript' | 'notification' | 'actions';
   singleLineHeadline?: boolean;
+  hideStoryCopy?: boolean;
 };
 
 export const storyStages: StoryStage[] = [
@@ -103,5 +105,41 @@ export const storyStages: StoryStage[] = [
     description: 'Thoughtfully designed to blend in. Built to stay out and stay smart.',
     ringColor: '#8B5CFF',
     oledMode: 'ready',
+  },
+  {
+    id: 9,
+    headline: '',
+    accent: '',
+    description: '',
+    ringColor: '#8B5CFF',
+    oledMode: 'qr',
+    hideStoryCopy: true,
+  },
+  {
+    id: 10,
+    headline: '',
+    accent: '',
+    description: '',
+    ringColor: '#8B5CFF',
+    oledMode: 'qr',
+    hideStoryCopy: true,
+  },
+  {
+    id: 11,
+    headline: '',
+    accent: '',
+    description: '',
+    ringColor: '#8B5CFF',
+    oledMode: 'qr',
+    hideStoryCopy: true,
+  },
+  {
+    id: 12,
+    headline: '',
+    accent: '',
+    description: '',
+    ringColor: '#8B5CFF',
+    oledMode: 'qr',
+    hideStoryCopy: true,
   },
 ];
