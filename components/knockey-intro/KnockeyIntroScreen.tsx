@@ -532,11 +532,11 @@ export const KnockeyIntroScreen: React.FC = () => {
         {activeStage !== null && (
           <>
             {!storyStages[activeStage].hideStoryCopy && (
-              <div className={`absolute inset-y-0 left-0 z-20 flex w-full items-end px-6 pb-20 sm:px-12 md:items-center md:pb-0 lg:px-[7vw] pointer-events-none ${activeStage === 8 ? 'md:justify-end md:text-right md:!pr-[6vw]' : ''}`}>
+        <div className={`absolute inset-y-0 left-0 z-20 flex w-full items-start px-6 pt-[14vh] sm:px-12 md:items-center md:pt-0 lg:px-[7vw] pointer-events-none ${activeStage === 8 ? 'md:justify-end md:text-right md:!pr-[6vw]' : ''}`}>
                 <StoryCopy stage={storyStages[activeStage]} />
               </div>
             )}
-            <div className={`absolute z-20 hidden xl:block ${storyStages[activeStage].sideUi === 'transcript' ? 'left-[51%] top-[19%]' : 'right-[8vw] top-1/2 -translate-y-1/2'}`}>
+            <div className={`absolute left-3 top-[58%] z-20 block origin-left scale-[0.62] md:hidden xl:block xl:scale-100 ${storyStages[activeStage].sideUi === 'transcript' ? 'xl:left-[51%] xl:top-[19%]' : 'xl:left-auto xl:right-[8vw] xl:top-1/2 xl:-translate-y-1/2'}`}>
               <StageSideUi stage={storyStages[activeStage]} />
             </div>
             <StoryProgress active={activeStage} count={storyStages.length} />
